@@ -1,6 +1,6 @@
+from hydra.utils import instantiate
 from torch.utils.data import ConcatDataset, DataLoader
 
-from hydra.utils import instantiate
 from tts.collate_fn.collate import collate_fn
 
 

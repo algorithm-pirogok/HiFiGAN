@@ -2,12 +2,10 @@ import logging
 import logging.config
 from pathlib import Path
 
-from tts.utils import read_json, ROOT_PATH
+from tts.utils import ROOT_PATH, read_json
 
 
-def setup_logging(
-        save_dir, log_config=None, default_level=logging.INFO
-):
+def setup_logging(save_dir, log_config=None, default_level=logging.INFO):
     """
     Setup logging configuration
     """

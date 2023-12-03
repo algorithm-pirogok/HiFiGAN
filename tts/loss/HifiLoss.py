@@ -16,7 +16,7 @@ class HiFiLoss(nn.Module):
     def discriminator_loss(target_prob, pred_prob):
         loss = 0
         for tg, pr in zip(target_prob, pred_prob):
-            loss = loss + torch.mean((tg - 1) ** 2) + torch.mean(pr ** 2)
+            loss = loss + torch.mean((tg - 1) ** 2) + torch.mean(pr**2)
         return loss
 
     @staticmethod

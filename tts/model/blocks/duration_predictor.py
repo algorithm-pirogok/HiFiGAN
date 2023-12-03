@@ -4,9 +4,11 @@ from tts.model.blocks.transpose import Transpose
 
 
 class DurationPredictor(nn.Module):
-    """ Duration Predictor """
+    """Duration Predictor"""
 
-    def __init__(self, encoder_dim, predictor_filter_size, predictor_kernel_size, dropout):
+    def __init__(
+        self, encoder_dim, predictor_filter_size, predictor_kernel_size, dropout
+    ):
         super(DurationPredictor, self).__init__()
 
         self.input_size = encoder_dim
@@ -18,8 +20,7 @@ class DurationPredictor(nn.Module):
         self.conv_net = nn.Sequential(
             Transpose(-1, -2),
             nn.Conv1d(
-                self.input_size, self.filter_size,
-                kernel_size=self.kernel, padding=1
+                self.input_size, self.filter_size, kernel_size=self.kernel, padding=1
             ),
             Transpose(-1, -2),
             nn.LayerNorm(self.filter_size),
@@ -27,13 +28,12 @@ class DurationPredictor(nn.Module):
             nn.Dropout(self.dropout),
             Transpose(-1, -2),
             nn.Conv1d(
-                self.filter_size, self.filter_size,
-                kernel_size=self.kernel, padding=1
+                self.filter_size, self.filter_size, kernel_size=self.kernel, padding=1
             ),
             Transpose(-1, -2),
             nn.LayerNorm(self.filter_size),
             nn.ReLU(),
-            nn.Dropout(self.dropout)
+            nn.Dropout(self.dropout),
         )
 
         self.linear_layer = nn.Linear(self.conv_output_size, 1)

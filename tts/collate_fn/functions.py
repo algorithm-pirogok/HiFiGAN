@@ -4,16 +4,16 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from tts.text import text_to_sequence
 from tts.datasets.MelSpectrogram import MelSpectrogram
+from tts.text import text_to_sequence
 from tts.utils.util import MelSpectrogramConfig
 
 
 def pad_1D(inputs, PAD=0):
     def pad_data(x, length, PAD):
-        x_padded = np.pad(x, (0, length - x.shape[0]),
-                          mode='constant',
-                          constant_values=PAD)
+        x_padded = np.pad(
+            x, (0, length - x.shape[0]), mode="constant", constant_values=PAD
+        )
         return x_padded
 
     max_len = max((len(x) for x in inputs))
@@ -40,9 +40,9 @@ def pad_2D(inputs, maxlen=None):
             raise ValueError("not max_len")
 
         s = np.shape(x)[1]
-        x_padded = np.pad(x, (0, max_len - np.shape(x)[0]),
-                          mode='constant',
-                          constant_values=PAD)
+        x_padded = np.pad(
+            x, (0, max_len - np.shape(x)[0]), mode="constant", constant_values=PAD
+        )
         return x_padded[:, :s]
 
     if maxlen:
@@ -77,6 +77,8 @@ def reprocess_tensor(batch, cut_list):
     audios = pad_1D_tensor([batch[ind]["target_audio"] for ind in cut_list])
     config = MelSpectrogramConfig()
     mels = MelSpectrogram(config)(audios)
-    return {"target_audio": torch.unsqueeze(audios, 0),
-            "audio_length": audio_length,
-            "target_mels": mels}
+    return {
+        "target_audio": torch.unsqueeze(audios, 0),
+        "audio_length": audio_length,
+        "target_mels": mels,
+    }

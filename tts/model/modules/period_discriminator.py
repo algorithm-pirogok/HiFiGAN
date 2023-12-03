@@ -1,27 +1,31 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.nn.utils import weight_norm, spectral_norm
+from torch.nn.utils import spectral_norm, weight_norm
 
 
 class PeriodBlock(nn.Module):
     def __init__(self, period, kernel_size=5, stride=3, *args, **kwargs):
         super().__init__()
         self.period = period
-        self.convs = nn.ModuleList([
-            weight_norm(nn.Conv2d(1, 32, (kernel_size, 1),
-                                  (stride, 1), padding=(2, 0))),
-            weight_norm(nn.Conv2d(32, 128, (kernel_size, 1),
-                                  (stride, 1), padding=(2, 0))),
-            weight_norm(nn.Conv2d(128, 512, (kernel_size, 1),
-                                  (stride, 1), padding=(2, 0))),
-            weight_norm(nn.Conv2d(512, 1024, (kernel_size, 1),
-                                  (stride, 1), padding=(2, 0))),
-            weight_norm(nn.Conv2d(1024, 1024, (kernel_size, 1),
-                                  1, padding=(2, 0))),
-        ])
-        self.conv_post = weight_norm(nn.Conv2d(1024, 1, (3, 1),
-                                               1, padding=(1, 0)))
+        self.convs = nn.ModuleList(
+            [
+                weight_norm(
+                    nn.Conv2d(1, 32, (kernel_size, 1), (stride, 1), padding=(2, 0))
+                ),
+                weight_norm(
+                    nn.Conv2d(32, 128, (kernel_size, 1), (stride, 1), padding=(2, 0))
+                ),
+                weight_norm(
+                    nn.Conv2d(128, 512, (kernel_size, 1), (stride, 1), padding=(2, 0))
+                ),
+                weight_norm(
+                    nn.Conv2d(512, 1024, (kernel_size, 1), (stride, 1), padding=(2, 0))
+                ),
+                weight_norm(nn.Conv2d(1024, 1024, (kernel_size, 1), 1, padding=(2, 0))),
+            ]
+        )
+        self.conv_post = weight_norm(nn.Conv2d(1024, 1, (3, 1), 1, padding=(1, 0)))
 
     def forward(self, x):
         fmap = []
@@ -47,13 +51,15 @@ class PeriodBlock(nn.Module):
 class MultyPeriodDiscriminator(nn.Module):
     def __init__(self, **keys):
         super().__init__()
-        self.discriminators = nn.ModuleList([
-            PeriodBlock(2),
-            PeriodBlock(3),
-            PeriodBlock(5),
-            PeriodBlock(7),
-            PeriodBlock(11),
-        ])
+        self.discriminators = nn.ModuleList(
+            [
+                PeriodBlock(2),
+                PeriodBlock(3),
+                PeriodBlock(5),
+                PeriodBlock(7),
+                PeriodBlock(11),
+            ]
+        )
 
     def forward(self, audio, pred_audio):
         lst_prob_audio, lst_history_audio = [], []

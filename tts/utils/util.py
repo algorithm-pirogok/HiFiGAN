@@ -1,15 +1,16 @@
 import json
+import logging
 from collections import OrderedDict
 from dataclasses import dataclass
 from itertools import repeat
 from pathlib import Path
 
-import logging
 import pandas as pd
 import torch
 
 ROOT_PATH = Path(__file__).absolute().resolve().parent.parent.parent
 batch_expand_size = 1
+
 
 def ensure_dir(dirname):
     dirname = Path(dirname)

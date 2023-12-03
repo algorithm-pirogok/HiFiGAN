@@ -1,17 +1,11 @@
 import os
 import time
 
-import numpy as np
-import torchaudio
 import torch
+import torchaudio
 from torch.utils.data import Dataset
-from tqdm import tqdm
-import pyworld as pw
-import scipy.interpolate as interpolate
 
-from tts.text import text_to_sequence
 from tts.utils.util import ROOT_PATH
-from tts.datasets.MelSpectrogram import MelSpectrogram
 
 
 class BufferDataset(Dataset):
@@ -27,7 +21,7 @@ class BufferDataset(Dataset):
         for root, dirs, files in os.walk(ROOT_PATH / data_path / "wavs"):
             for file in files:
                 path_file = os.path.join(root, file)
-                audio, sample_rate = torchaudio.load(path_file) # 8192
+                audio, sample_rate = torchaudio.load(path_file)  # 8192
                 if audio.shape[1] < mn:
                     mn = audio.shape[1]
                 buffer.append({"target_audio": audio[0]})
@@ -40,8 +34,12 @@ class BufferDataset(Dataset):
 
     def __getitem__(self, idx):
         elem = self.buffer[idx % 1]
-        start_index = torch.randint(0, elem["target_audio"].shape[-1] - self.slice_length + 1, (1, ))
-        elem["target_audio"] = elem["target_audio"][start_index:start_index+self.slice_length]
+        start_index = torch.randint(
+            0, elem["target_audio"].shape[-1] - self.slice_length + 1, (1,)
+        )
+        elem["target_audio"] = elem["target_audio"][
+            start_index : start_index + self.slice_length
+        ]
 
         return elem
 

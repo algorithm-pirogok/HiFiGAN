@@ -4,7 +4,7 @@ import torch.nn as nn
 
 
 class ScaledDotProductAttention(nn.Module):
-    """ Scaled Dot-Product Attention """
+    """Scaled Dot-Product Attention"""
 
     def __init__(self, temperature, attn_dropout=0.1):
         super().__init__()
@@ -32,7 +32,7 @@ class ScaledDotProductAttention(nn.Module):
 
 
 class MultiHeadAttention(nn.Module):
-    """ Multi-Head Attention module """
+    """Multi-Head Attention module"""
 
     def __init__(self, n_head, d_model, d_k, d_v, dropout=0.1):
         super().__init__()
@@ -46,8 +46,7 @@ class MultiHeadAttention(nn.Module):
         self.w_ks = nn.Linear(d_model, n_head * d_k)
         self.w_vs = nn.Linear(d_model, n_head * d_v)
 
-        self.attention = ScaledDotProductAttention(
-            temperature=d_k ** 0.5)
+        self.attention = ScaledDotProductAttention(temperature=d_k**0.5)
         self.layer_norm = nn.LayerNorm(d_model)
 
         self.fc = nn.Linear(n_head * d_v, d_model)
@@ -59,12 +58,15 @@ class MultiHeadAttention(nn.Module):
 
     def reset_parameters(self):
         # normal distribution initialization better than kaiming(default in pytorch)
-        nn.init.normal_(self.w_qs.weight, mean=0,
-                        std=np.sqrt(2.0 / (self.d_model + self.d_k)))
-        nn.init.normal_(self.w_ks.weight, mean=0,
-                        std=np.sqrt(2.0 / (self.d_model + self.d_k)))
-        nn.init.normal_(self.w_vs.weight, mean=0,
-                        std=np.sqrt(2.0 / (self.d_model + self.d_v)))
+        nn.init.normal_(
+            self.w_qs.weight, mean=0, std=np.sqrt(2.0 / (self.d_model + self.d_k))
+        )
+        nn.init.normal_(
+            self.w_ks.weight, mean=0, std=np.sqrt(2.0 / (self.d_model + self.d_k))
+        )
+        nn.init.normal_(
+            self.w_vs.weight, mean=0, std=np.sqrt(2.0 / (self.d_model + self.d_v))
+        )
 
     def forward(self, q, k, v, mask=None):
         d_k, d_v, n_head = self.d_k, self.d_v, self.n_head
@@ -88,7 +90,9 @@ class MultiHeadAttention(nn.Module):
         output, attn = self.attention(q, k, v, mask=mask)
 
         output = output.view(n_head, sz_b, len_q, d_v)
-        output = output.permute(1, 2, 0, 3).contiguous().view(sz_b, len_q, -1)  # b x lq x (n*dv)
+        output = (
+            output.permute(1, 2, 0, 3).contiguous().view(sz_b, len_q, -1)
+        )  # b x lq x (n*dv)
 
         output = self.dropout(self.fc(output))
         output = self.layer_norm(output + residual)

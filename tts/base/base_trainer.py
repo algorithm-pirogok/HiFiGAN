@@ -1,15 +1,14 @@
+import os
 from abc import abstractmethod
 from datetime import datetime
 from pathlib import Path
 
 import torch
 from numpy import inf
-from tts.utils import get_logger
-
-import os
 
 from tts.base import BaseModel
 from tts.logger import get_visualizer
+from tts.utils import get_logger
 
 
 class BaseTrainer:
@@ -17,8 +16,17 @@ class BaseTrainer:
     Base class for all trainers
     """
 
-    def __init__(self, model: BaseModel, criterion, metrics_train, metrics_test,
-                 generator_optimizer, discriminator_optimizer, config, device):
+    def __init__(
+        self,
+        model: BaseModel,
+        criterion,
+        metrics_train,
+        metrics_test,
+        generator_optimizer,
+        discriminator_optimizer,
+        config,
+        device,
+    ):
         self.device = device
         self.config = config
         self.logger = get_logger("trainer", config["trainer"]["verbosity"])
@@ -30,8 +38,12 @@ class BaseTrainer:
         self.generator_optimizer = generator_optimizer
         self.discriminator_optimizer = discriminator_optimizer
 
-        path = Path(self.config["trainer"]["save_dir"]) / "models" / config[
-            "name"] / datetime.now().strftime(r"%m%d_%H%M%S")
+        path = (
+            Path(self.config["trainer"]["save_dir"])
+            / "models"
+            / config["name"]
+            / datetime.now().strftime(r"%m%d_%H%M%S")
+        )
 
         os.makedirs(path, exist_ok=True)
 
@@ -61,9 +73,7 @@ class BaseTrainer:
         self.start_epoch = 1
 
         # setup visualization writer instance
-        self.writer = get_visualizer(
-            config, self.logger, cfg_trainer["visualize"]
-        )
+        self.writer = get_visualizer(config, self.logger, cfg_trainer["visualize"])
 
         if config.checkpoint is not None:
             print("Checkpoint:", config.checkpoint)
@@ -155,9 +165,11 @@ class BaseTrainer:
 
         # load optimizer state from checkpoint only when optimizer type is not changed.
         if (
-                checkpoint["config"]["generator_optimizer"] != self.config["generator_optimizer"] or
-                checkpoint["config"]["discriminator_optimizer"] != self.config["discriminator_optimizer"] or
-                checkpoint["config"]["lr_scheduler"] != self.config["lr_scheduler"]
+            checkpoint["config"]["generator_optimizer"]
+            != self.config["generator_optimizer"]
+            or checkpoint["config"]["discriminator_optimizer"]
+            != self.config["discriminator_optimizer"]
+            or checkpoint["config"]["lr_scheduler"] != self.config["lr_scheduler"]
         ):
             self.logger.warning(
                 "Warning: Optimizer or lr_scheduler given in config file is different "
@@ -165,7 +177,9 @@ class BaseTrainer:
             )
         else:
             self.generator_optimizer.load_state_dict(checkpoint["generator_optimizer"])
-            self.discriminator_optimizer.load_state_dict(checkpoint["discriminator_optimizer"])
+            self.discriminator_optimizer.load_state_dict(
+                checkpoint["discriminator_optimizer"]
+            )
 
         self.logger.info(
             "Checkpoint loaded. Resume training from epoch {}".format(self.start_epoch)
