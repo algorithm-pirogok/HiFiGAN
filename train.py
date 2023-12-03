@@ -68,7 +68,7 @@ def main(clf: DictConfig):
         discriminator_optimizer=discriminator_optimizer,
         config=clf,
         device=device,
-        log_step=200,
+        log_step=clf["trainer"].get("log_step", 100),
         dataloader=dataloader,
         generator_scheduler=generator_scheduler,
         discriminator_scheduler=discriminator_scheduler,
