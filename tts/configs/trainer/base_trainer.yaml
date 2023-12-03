@@ -10,5 +10,5 @@ wandb_name: one_batch_test
 wandb_entity: wandb_pirogok
 len_epoch: 1000
 batch_acum: 1
-log_step: 50
+log_step: 45
 grad_norm_clip: 25
