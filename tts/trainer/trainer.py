@@ -106,12 +106,12 @@ class Trainer(BaseTrainer):
         self.writer.add_scalar("epoch", epoch)
 
         for batch_idx, batch in enumerate(
-            tqdm(self.train_dataloader, desc="train", total=self.len_epoch)
+            tqdm(self.train_dataloader, desc="train", total=self.len_epoch / 15)
         ):
             try:
                 batch = self.process_batch(
                     batch,
-                    batch_idx=batch_idx,
+                    batch_idx=batch_idx * 15,
                     is_train=True,
                     metrics=self.train_metrics,
                 )
@@ -126,8 +126,8 @@ class Trainer(BaseTrainer):
                 else:
                     raise e
             # self.train_metrics.update("grad norm", self.get_grad_norm())
-            if batch_idx % self.log_step == 0:
-                self.writer.set_step((epoch - 1) * self.len_epoch + batch_idx)
+            if batch_idx * 15 % self.log_step == 0:
+                self.writer.set_step((epoch - 1) * self.len_epoch + batch_idx * 15)
                 self.logger.debug(
                     f"Train Epoch: {epoch} Generator Loss: {batch['general_loss']} "
                     f"Discriminator Loss: {batch['discriminator_loss']}"
@@ -149,7 +149,7 @@ class Trainer(BaseTrainer):
                     batch["target_audio"],
                     batch["pred_audio"],
                 )
-                if batch_idx >= self.len_epoch:
+                if batch_idx * 15 >= self.len_epoch:
                     return last_train_metrics
 
         log = last_train_metrics
