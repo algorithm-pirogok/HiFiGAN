@@ -61,7 +61,7 @@ class Trainer(BaseTrainer):
         self.generator_scheduler = generator_scheduler
         self.discriminator_scheduler = discriminator_scheduler
         self.log_step = log_step
-        self.wav_to_mel = MelSpectrogram(MelSpectrogramConfig())
+        self.wav_to_mel = MelSpectrogram(MelSpectrogramConfig()).to(device)
         self.metrics = [
             "general_loss",
             "discriminator_loss",
