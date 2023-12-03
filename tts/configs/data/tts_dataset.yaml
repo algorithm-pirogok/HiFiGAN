@@ -1,4 +1,4 @@
-batch_size: 15
+batch_size: 1
 batch_expand_size: 1
 num_workers: 8
 
