@@ -1,10 +1,7 @@
-import random
 from itertools import chain
 from pathlib import Path
-from random import shuffle
 
 import numpy as np
-import pandas as pd
 import PIL
 import torch
 from torch.nn.utils import clip_grad_norm_
@@ -16,7 +13,6 @@ from tts.datasets.MelSpectrogram import MelSpectrogram
 from tts.logger.utils import plot_spectrogram_to_buf
 from tts.utils import ROOT_PATH, MetricTracker, inf_loop
 from tts.utils.util import MelSpectrogramConfig
-from waveglow.inference import get_wav
 
 
 class Trainer(BaseTrainer):
