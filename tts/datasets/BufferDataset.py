@@ -38,7 +38,7 @@ class BufferDataset(Dataset):
             0, elem["target_audio"].shape[-1] - self.slice_length + 1, (1,)
         )
         elem["target_audio"] = elem["target_audio"][
-            start_index : start_index + self.slice_length
+            start_index: start_index + self.slice_length
         ]
 
         return elem

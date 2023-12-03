@@ -20,7 +20,7 @@ def get_dataloaders(clf):
         batch_size=clf.batch_size,
         shuffle=True,
         num_workers=clf.get("num_workers", 1),
-        collate_fn=collate_fn,
+        collate_fn=collate_fn(),
         drop_last=True,
     )
 
