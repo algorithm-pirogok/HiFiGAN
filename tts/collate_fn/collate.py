@@ -25,7 +25,7 @@ def collate_fn(dataset_items: List[dict]):
     target_mels = MelSpectrogram(config)(target_audio)
 
     return {
-        "target_audio": torch.unsqueeze(target_audio, 0),
+        "target_audio": torch.unsqueeze(target_audio, 1),
         "audio_length": audio_length,
         "target_mels": target_mels,
     }
