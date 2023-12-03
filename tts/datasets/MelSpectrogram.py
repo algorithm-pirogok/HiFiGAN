@@ -43,7 +43,7 @@ class MelSpectrogram(nn.Module):
         :param audio: Expected shape is [B, T]
         :return: Shape is [B, n_mels, T']
         """
-
+        print("DEVICE:", audio.get_device())
         mel = self.mel_spectrogram(audio).clamp_(min=1e-5).log_()
 
         return mel
