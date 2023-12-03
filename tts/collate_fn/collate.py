@@ -13,7 +13,7 @@ from tts.utils.util import MelSpectrogramConfig
 class collate_fn:
     def __init__(self):
         config = MelSpectrogramConfig()
-        self.wav_to_mel = MelSpectrogram(config).to('cpu')
+        self.wav_to_mel = MelSpectrogram(config).to('cuda')
 
     def __call__(self, dataset_items: List[dict]):
         """
@@ -28,7 +28,7 @@ class collate_fn:
         # for num, (item, len_audio) in enumerate(zip(dataset_items, audio_length)):
         #    target_audio[num, :len_audio] = torch.tensor(item["target_audio"])
 
-        target_mels = self.wav_to_mel(target_audio.to(torch.device("cpu")))
+        target_mels = self.wav_to_mel(target_audio)
 
         return {
             "target_audio": torch.unsqueeze(target_audio, 1),
