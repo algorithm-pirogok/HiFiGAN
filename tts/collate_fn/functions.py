@@ -5,7 +5,6 @@ import torch
 import torch.nn.functional as F
 
 from tts.datasets.MelSpectrogram import MelSpectrogram
-from tts.text import text_to_sequence
 from tts.utils.util import MelSpectrogramConfig
 
 
