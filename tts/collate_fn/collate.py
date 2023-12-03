@@ -23,7 +23,7 @@ class collate_fn:
         audio_length = torch.tensor(
             [dataset["target_audio"].shape[-1] for dataset in dataset_items]
         )
-        target_audio = torch.vstack([dataset["target_audio"] for dataset in dataset_items])
+        target_audio = torch.vstack([dataset["target_audio"].copy(deep=True) for dataset in dataset_items])
         # target_audio = torch.zeros((len(dataset_items), max(audio_length)))
         # for num, (item, len_audio) in enumerate(zip(dataset_items, audio_length)):
         #    target_audio[num, :len_audio] = torch.tensor(item["target_audio"])
