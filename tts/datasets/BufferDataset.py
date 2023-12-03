@@ -40,7 +40,6 @@ class BufferDataset(Dataset):
         elem["target_audio"] = elem["target_audio"][
             start_index: start_index + self.slice_length
         ]
-        print("DATASET_DEVICE", elem['target_audio'].get_device())
         return elem
 
     def _create_buffer(self):
