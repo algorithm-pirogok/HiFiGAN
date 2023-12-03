@@ -17,7 +17,7 @@ def get_dataloaders(clf):
     # create dataloader
     dataloader = DataLoader(
         dataset,
-        batch_size=clf.batch_expand_size * clf.batch_size,
+        batch_size=clf.batch_size,
         shuffle=True,
         num_workers=clf.get("num_workers", 1),
         collate_fn=collate_fn,
