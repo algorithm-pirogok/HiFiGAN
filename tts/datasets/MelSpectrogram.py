@@ -45,6 +45,6 @@ class MelSpectrogram(nn.Module):
         """
         print("DEVICE:", audio.get_device())
         print("CPU DEVICE:", audio.to('cpu').get_device())
-        mel = self.mel_spectrogram(audio).clamp_(min=1e-5).log_()
+        mel = self.mel_spectrogram(audio.to('cpu')).clamp_(min=1e-5).log_()
 
         return mel
