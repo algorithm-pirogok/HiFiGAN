@@ -13,7 +13,7 @@ from tts.utils.util import MelSpectrogramConfig
 class collate_fn:
     def __init__(self):
         config = MelSpectrogramConfig()
-        self.wav_to_mel = MelSpectrogram(config).to('cuda:0')
+        self.wav_to_mel = MelSpectrogram(config).to('cpu')
 
     def __call__(self, dataset_items: List[dict]):
         """
