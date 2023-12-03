@@ -23,7 +23,7 @@ class HiFiLoss(nn.Module):
     def generator_loss(pred_prob):
         loss = 0
         for pred in pred_prob:
-            loss += torch.mean((pred - 1) ** 2)
+            loss = loss + torch.mean((pred - 1) ** 2)
         return loss
 
     def feature_loss(self, target_prob, pred_prob):
