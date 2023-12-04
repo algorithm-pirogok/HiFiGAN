@@ -201,18 +201,18 @@ class Trainer(BaseTrainer):
         (
             _,
             pred_scale,
-            scale_real_history,
-            scale_pred_history,
+            real_scale_history,
+            pred_scale_history,
         ) = self.model.scale_discriminator(batch["target_audio"], batch["pred_audio"])
         (
             _,
             pred_period,
             real_period_history,
             pred_period_history,
-        ) = self.model.scale_discriminator(batch["target_audio"], batch["pred_audio"])
+        ) = self.model.period_discriminator.per(batch["target_audio"], batch["pred_audio"])
 
         batch["feature_loss"] = self.criterion.feature_loss(
-            scale_real_history, scale_pred_history
+            real_scale_history, pred_scale_history
         ) + self.criterion.feature_loss(real_period_history, pred_period_history)
 
         batch["generator_loss"] = self.criterion.generator_loss(
