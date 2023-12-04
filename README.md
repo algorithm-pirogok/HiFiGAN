@@ -1,18 +1,22 @@
-# SS project barebones
+# Mel2Wav
 
 ## Установка
 
-Для установки для начала потребуется  установить библиотеки и 
-скачать модель
+Для установки для начала потребуется  установить библиотеки, скачать данные и модель
 ```shell
 pip install -r ./requirements.txt
+wget https://data.keithito.com/data/speech/LJSpeech-1.1.tar.bz2 -o /dev/null
+mkdir data
+tar -xvf LJSpeech-1.1.tar.bz2 >> /dev/null
+mv LJSpeech-1.1 data/LJSpeech-1.1
 ```
+Модель лежит по ссылке - https://disk.yandex.ru/d/MT-ns08rraj6Gw
 
 
 ## Модель
 
-Реализация основана на статье SpeX+ с использованием hydra в качестве конфига.
-
+Реализация основана на статье HiFiGAN с использованием hydra в качестве конфига.
+https://arxiv.org/pdf/2010.05646.pdf
 
 
 ## Проверка на данных
@@ -20,33 +24,28 @@ pip install -r ./requirements.txt
 Чтобы запустить тренировку модели на части LibriSpeech нужно изменить config, а именно часть, отвечающую за датасеты.
 Выглядит она так
 ```yaml
-train:
-  batch_size: 4
-  num_workers: 8
-  datasets:
-    - _target_: tts.datasets.MixedLibrispeechDataset
-      part: train-clean-100
-      sr: 16000
+batch_size: 25
+batch_expand_size: 1
+num_workers: 10
+
+datasets:
+  - _target_: tts.datasets.BufferDataset
+    data_path: 'data/LJSpeech-1.1'
+    slice_length: 8192
 ```
-Все, что нужно подправить, это указать какую часть датасета мы хотим слушать и размер батча.
+Все, что нужно подправить, это указать по какому пути лежит датасет.
 
 Также можно протестировать модель на произвольном датасете, для этого нужно поменять конфиг данных для тренировки6 устроен он следующим образом:
 ```yaml
-test:
-  batch_size: 1
-  num_workers: 8
-  datasets:
-    - _target_: tts.datasets.MixedTestDataset
-      sr: 16000
-      absolute_path: True
-      path_to_mix_dir: data/datasets/test_dataset/mix/mix
-      path_to_ref_dir: data/datasets/test_dataset/ref/refs
-      path_to_target_dir: data/datasets/test_dataset/target/targets
+defaults:
+  - arch: HiFiGAN
+  # - augmentations: base_augmentations
 
+name: test_config
+n_gpu: 1
+checkpoint: 
 ```
-Соответсвенно поменять нужно пути, если данные лежат по абсолютному пути, то `absolute_path` нужно ставить False
-
-Также для продолжения нужно указать checkpoint от того, что мы хотим делать
+Для запуска нужно указать путь до модели с помощью checkpoint.
 
 ## Credits
 
