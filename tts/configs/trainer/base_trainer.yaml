@@ -11,4 +11,4 @@ wandb_entity: wandb_pirogok
 len_epoch: 1000
 batch_acum: 1
 log_step: 50
-grad_norm_clip: 500
+grad_norm_clip: 250
