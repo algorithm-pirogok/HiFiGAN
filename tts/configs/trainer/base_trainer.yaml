@@ -6,9 +6,9 @@ monitor: min val_loss
 early_stop: 100
 visualize: wandb
 wandb_project: nv_homework
-wandb_name: one_batch_test
+wandb_name: normal_model
 wandb_entity: wandb_pirogok
-len_epoch: 50
+len_epoch: 1000
 batch_acum: 1
-log_step: 3
-grad_norm_clip: 150
+log_step: 50
+grad_norm_clip: 500

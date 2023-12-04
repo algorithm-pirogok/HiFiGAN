@@ -27,7 +27,6 @@ class collate_fn:
         # target_audio = torch.zeros((len(dataset_items), max(audio_length)))
         # for num, (item, len_audio) in enumerate(zip(dataset_items, audio_length)):
         #    target_audio[num, :len_audio] = torch.tensor(item["target_audio"])
-        print("Collate")
         target_mels = self.wav_to_mel(target_audio)
 
         return {

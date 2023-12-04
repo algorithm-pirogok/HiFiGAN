@@ -162,7 +162,6 @@ class Trainer(BaseTrainer):
         batch = self.move_batch_to_device(batch, self.device)
 
         batch["pred_audio"] = self.model.generator(batch["target_mels"])
-        print("PROCESS BATCH")
         batch["pred_mels"] = self.wav_to_mel(batch["pred_audio"].squeeze(1))
 
         real_scale, pred_scale, _, _ = self.model.scale_discriminator(
