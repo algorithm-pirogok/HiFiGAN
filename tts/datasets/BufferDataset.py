@@ -33,7 +33,7 @@ class BufferDataset(Dataset):
         return self.length_dataset
 
     def __getitem__(self, idx):
-        elem = self.buffer[idx]
+        elem = self.buffer[idx % 1]
         start_index = torch.randint(
             0, elem["target_audio"].shape[-1] - self.slice_length + 1, (1,)
         )

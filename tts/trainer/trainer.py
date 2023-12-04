@@ -175,7 +175,7 @@ class Trainer(BaseTrainer):
 
         batch["discriminator_loss"] = batch["scale_loss"] + batch["period_loss"]
 
-        if is_train and (batch_idx % 40 < 20):
+        if is_train and (batch_idx % 30 < 15):
             self.discriminator_optimizer.zero_grad()
             batch["discriminator_loss"].backward()
             self._clip_grad_norm(self.model.scale_discriminator.parameters())
@@ -221,7 +221,7 @@ class Trainer(BaseTrainer):
             batch["mel_loss"] + batch["feature_loss"] + batch["generator_loss"]
         )
 
-        if is_train and (batch_idx % 40 >= 20):
+        if is_train and (batch_idx % 30 >= 15):
             self.generator_optimizer.zero_grad()
             batch["general_loss"].backward()
             self._clip_grad_norm(self.model.generator.parameters())
