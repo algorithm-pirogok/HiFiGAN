@@ -162,7 +162,6 @@ class Trainer(BaseTrainer):
 
         batch["pred_audio"] = self.model.generator(batch["target_mels"])
         batch["pred_mels"] = self.wav_to_mel(batch["pred_audio"].squeeze(1))
-
         real_scale, pred_scale, _, _ = self.model.scale_discriminator(
             batch["target_audio"], batch["pred_audio"].detach()
         )
@@ -176,7 +175,7 @@ class Trainer(BaseTrainer):
 
         batch["discriminator_loss"] = batch["scale_loss"] + batch["period_loss"]
 
-        if is_train:
+        if is_train and (batch_idx % 40 < 20):
             self.discriminator_optimizer.zero_grad()
             batch["discriminator_loss"].backward()
             self._clip_grad_norm(self.model.scale_discriminator.parameters())
@@ -222,7 +221,7 @@ class Trainer(BaseTrainer):
             batch["mel_loss"] + batch["feature_loss"] + batch["generator_loss"]
         )
 
-        if is_train:
+        if is_train and (batch_idx % 40 >= 20):
             self.generator_optimizer.zero_grad()
             batch["general_loss"].backward()
             self._clip_grad_norm(self.model.generator.parameters())

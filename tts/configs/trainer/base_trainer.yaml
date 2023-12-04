@@ -6,7 +6,7 @@ monitor: min val_loss
 early_stop: 100
 visualize: wandb
 wandb_project: nv_homework
-wandb_name: normal_model
+wandb_name: delayed_model
 wandb_entity: wandb_pirogok
 len_epoch: 1000
 batch_acum: 1
