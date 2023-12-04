@@ -209,7 +209,7 @@ class Trainer(BaseTrainer):
             pred_period,
             real_period_history,
             pred_period_history,
-        ) = self.model.period_discriminator.per(batch["target_audio"], batch["pred_audio"])
+        ) = self.model.period_discriminator(batch["target_audio"], batch["pred_audio"])
 
         batch["feature_loss"] = self.criterion.feature_loss(
             real_scale_history, pred_scale_history
