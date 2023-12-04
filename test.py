@@ -32,9 +32,7 @@ def main(clf):
 
     # build model architecture
     model = instantiate(clf["arch"])
-    print(clf.checkpoint)
     checkpoint = torch.load(clf.checkpoint, map_location=device)
-    print(checkpoint)
     state_dict = checkpoint["state_dict"]
     if clf["n_gpu"] > 1:
         model = torch.nn.DataParallel(model)
