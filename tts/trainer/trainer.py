@@ -125,7 +125,6 @@ class Trainer(BaseTrainer):
                     continue
                 else:
                     raise e
-            print(batch_idx, self.log_step)
             if batch_idx % self.log_step == 0:
                 self.writer.set_step((epoch - 1) * self.len_epoch + batch_idx)
                 self.logger.debug(
