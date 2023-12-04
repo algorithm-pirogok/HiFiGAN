@@ -12,10 +12,8 @@ import torch
 from tqdm import tqdm
 import pyloudnorm as pyln
 
-from tts.metric.utils import calc_cer, calc_wer
 import tts.model as module_model
 from tts.trainer import Trainer
-from tts.metric import PESQMetric, SISDRMetric
 from tts.utils import ROOT_PATH, get_logger
 from tts.utils.object_loading import get_dataloaders
 
@@ -25,20 +23,18 @@ DEFAULT_CHECKPOINT_PATH = ROOT_PATH / "default_test_model" / "checkpoint.pth"
 @hydra.main(config_path='tts/configs', config_name='test_config')
 def main(clf):
 
-    logger = get_logger("test")
 
     # define cpu or gpu if possible
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = "cpu"
 
     # setup data_loader instances
-    dataloaders = get_dataloaders(clf)
+    # dataloaders = get_dataloaders(clf)
 
     # build model architecture
     model = instantiate(clf["arch"])
-    logger.info(model)
-
-    logger.info("Loading checkpoint: {} ...".format(clf.checkpoint))
+    print(clf.checkpoint)
     checkpoint = torch.load(clf.checkpoint, map_location=device)
+    print(checkpoint)
     state_dict = checkpoint["state_dict"]
     if clf["n_gpu"] > 1:
         model = torch.nn.DataParallel(model)
@@ -47,14 +43,10 @@ def main(clf):
     # prepare model for testing
     model = model.to(device)
     model.eval()
-
+    exit()
     results = []
     metrcics = defaultdict(list)
 
-    pesq = PESQMetric(name="PESQ Metric", train=False, fs=16000, mode='wb', n_processes=1, comb=False)
-    comb_pesq = PESQMetric(name="Comb PESQ Metric", train=False, fs=16000, mode='wb', n_processes=1, comb=True)
-    si_sdr = SISDRMetric(name="SI-SDR Metric", train=True, zero_mean=False, comb=False)
-    comb_si_sdr = SISDRMetric(name="SI-SDR Metric", train=True, zero_mean=False, comb=True)
 
     norm_wav = pyln.Meter(clf["preprocessing"]["sr"])
 
